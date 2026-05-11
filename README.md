@@ -23,7 +23,7 @@ Everything in this repository is still under active development and subject to c
 
 
 
-# Getting Started
+## Getting Started
 
 Start by cloning the repository:
 
@@ -129,9 +129,15 @@ python prepare_colmap_data.py --data_dir data/your_own_data
 - Per-object binary masks were generated using [SAM-UI](https://github.com/mtaktash/sam-ui?utm_source=chatgpt.com).
 
 
+## Training
 
+Training is launched with:
 
-# Citation
+```bash
+python train.py -c configs/<config_file>.yaml
+```
+
+## Citation
 
 ```bibtex
 @inproceedings{semanticfoam2026,
