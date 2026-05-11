@@ -137,6 +137,246 @@ Training is launched with:
 python train.py -c configs/<config_file>.yaml
 ```
 
+
+# Testing and Evaluation
+
+Use the following script to evaluate a trained checkpoint, render test views, compute rendering metrics, evaluate segmentation quality, extract segmented assets, and generate trajectory videos.
+
+---
+
+## Basic Usage
+
+```bash
+python test.py -c output/<checkpoint_directory>/config.yaml
+```
+
+Example:
+
+```bash
+python test.py -c output/garden_semanticfoam/config.yaml
+```
+
+---
+
+## What `test.py` Does
+
+The evaluation pipeline is divided into multiple stages:
+
+### 1. Test Rendering
+
+Renders all test views and computes:
+
+- PSNR
+- SSIM
+- LPIPS
+
+Also saves:
+
+- RGB renders
+- Error maps
+- Segmentation predictions
+- Confidence maps
+
+---
+
+### 2. Segmentation Evaluation *(Optional)*
+
+Computes:
+
+- IoU
+- Pixel Accuracy
+
+Also saves:
+
+- Predicted masks
+- Ground-truth masks
+- Extracted object crops
+
+---
+
+### 3. Object Extraction *(Optional)*
+
+Extracts segmented scene assets and saves each object as:
+
+- `.pt`
+- `.ply`
+
+---
+
+### 4. Trajectory Video Rendering *(Optional)*
+
+Generates:
+
+- RGB trajectory videos
+- Segmentation videos
+- Per-object isolated renders
+
+---
+
+# Output Structure
+
+After evaluation, outputs are written inside the checkpoint directory:
+
+```text
+output/<checkpoint_directory>/
+├── test/
+│   ├── metrics.txt
+│   ├── view_000/
+│   │   ├── gt_rgb.png
+│   │   ├── pred_rgb.png
+│   │   ├── error_map.png
+│   │   ├── gt_segmentation.png
+│   │   ├── pred_segmentation.png
+│   │   └── confidence_map.png
+│
+├── segmentation_eval/
+│   └── test/
+│
+├── metrics_summary/
+│   ├── <scene>_metrics.txt
+│   └── all_scenes_summary.csv
+│
+├── objects/
+│   ├── <object>.pt
+│   └── <object>.ply
+│
+└── videos/
+    ├── scene_360/
+    └── obj_<object_name>/
+```
+
+---
+
+# Common Usage Examples
+
+## Basic Evaluation
+
+```bash
+python test.py -c output/garden/config.yaml
+```
+
+---
+
+## Segmentation Evaluation + Object Extraction
+
+```bash
+python test.py \
+    -c output/garden/config.yaml \
+    --eval_segmentation
+```
+
+---
+
+## Render 360° Trajectory Videos
+
+```bash
+python test.py \
+    -c output/garden/config.yaml \
+    --trajectory_type 360
+```
+
+---
+
+## Render First Camera Orbit
+
+```bash
+python test.py \
+    -c output/garden/config.yaml \
+    --trajectory_type firstcam
+```
+
+---
+
+## Render Spiral Trajectory
+
+```bash
+python test.py \
+    -c output/garden/config.yaml \
+    --trajectory_type spiral
+```
+
+---
+
+## Full Evaluation Pipeline
+
+```bash
+python test.py \
+    -c output/garden/config.yaml \
+    --eval_segmentation \
+    --trajectory_type 360
+```
+
+---
+
+# Important Flags Reference
+
+| Flag | Default | Description |
+|---|---|---|
+| `--eval_segmentation` | `False` | Run segmentation evaluation and compute IoU / Accuracy metrics. Also extracts object assets. |
+| `--trajectory_type` | `None` | Render trajectory videos. Options: `360`, `firstcam`, `spiral`. |
+| `--conf_thresh` | `0.9` | Softmax confidence threshold used during object extraction. |
+| `--fps` | `30` | Output video frame rate. |
+| `--n_frames` | `200` | Number of frames in rendered trajectories. |
+| `--radius` | `3.5` | Orbit radius for trajectory rendering. |
+| `--fov` | `0.7` | Camera field of view used during trajectory rendering. |
+| `--height` | `0.8` | Camera height offset for trajectories. |
+| `--forward_push` | `0.0` | Push camera forward during first-camera trajectories. |
+| `--n_rots` | `2` | Number of rotations for orbit trajectories. |
+
+---
+
+# Trajectory Types
+
+| Type | Description |
+|---|---|
+| `360` | Global orbit around the scene or selected object center. |
+| `firstcam` | Orbit relative to the first training camera pose. |
+| `spiral` | Smooth spiral trajectory around the scene. |
+
+---
+
+# Rendering Metrics
+
+The script computes the following rendering metrics:
+
+| Metric | Description |
+|---|---|
+| PSNR | Peak Signal-to-Noise Ratio |
+| SSIM | Structural Similarity |
+| LPIPS | Learned Perceptual Image Patch Similarity |
+
+---
+
+# Segmentation Metrics
+
+For segmentation evaluation:
+
+| Metric | Description |
+|---|---|
+| IoU | Intersection-over-Union |
+| Accuracy | Pixel-wise segmentation accuracy |
+
+---
+
+# Notes
+
+- Segmentation evaluation requires:
+
+```text
+segmentation_labels/masks/
+```
+
+to exist inside the dataset directory.
+
+
+
+- Video rendering automatically generates:
+  - full-scene videos
+  - segmentation videos
+  - isolated per-object renders
+
+- All renders and metrics are saved automatically into the experiment output directory.
+
 ## Citation
 
 ```bibtex
