@@ -54,6 +54,81 @@ Then install the remaining dependencies:
 pip install -r requirements.txt
 ```
 
+## Dataset Layout
+
+We have tested our method on the following datasets:
+
+- [Mip-NeRF 360](https://jonbarron.info/mipnerf360/?utm_source=chatgpt.com)
+- [NVOS](https://jason718.github.io/nvos/?utm_source=chatgpt.com)
+- [LERF](https://www.lerf.io/?utm_source=chatgpt.com)
+
+---
+
+### Expected Directory Structure
+
+```text
+dataset_root/
+├── images/
+│   ├── 0000.png
+│   ├── 0001.png
+│   └── ...
+│
+├── sparse/
+│   └── 0/
+│       ├── cameras.bin
+│       ├── images.bin
+│       └── points3D.bin
+│
+├── object_mask/
+│   ├── 0000.png
+│   ├── 0001.png
+│   └── ...
+│
+├── segmentation_labels/
+│   └── masks/
+│       ├── object_1/
+│       │   ├── 0000.png
+│       │   ├── 0001.png
+│       │   └── ...
+│       │
+│       ├── object_2/
+│       │   ├── 0000.png
+│       │   ├── 0001.png
+│       │   └── ...
+│       │
+│       └── ...
+│
+└── config.yaml
+```
+
+---
+
+### Folder Description
+
+| Folder | Description |
+| --- | --- |
+| `images/` | Input RGB training images |
+| `sparse/0/` | COLMAP sparse reconstruction outputs |
+| `object_mask/` | Ground truth segmentation maps |
+| `segmentation_labels/` | Per-object binary masks used for IoU and accuracy evaluation |
+| `config.yaml` | Training configuration file |
+
+---
+
+### Notes
+
+- Segmentation maps are generated using [DEVA](https://github.com/hkchengrex/Tracking-Anything-with-DEVA?utm_source=chatgpt.com).  
+  A preprocessing script will be released soon.
+
+- COLMAP reconstructions can be generated using:
+
+```bash
+python prepare_colmap_data.py --data_dir data/your_own_data
+```
+
+- Per-object binary masks were generated using [SAM-UI](https://github.com/mtaktash/sam-ui?utm_source=chatgpt.com).
+
+
 
 
 # Citation
