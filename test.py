@@ -5,6 +5,8 @@ import numpy as np
 import torch
 import configargparse
 import matplotlib.pyplot as plt
+from PIL import Image
+import cv2
 
 from data_loader import DataHandler
 from configs import *
@@ -259,10 +261,11 @@ def extract_objects(model, classifier, cls_args, obj_map, outdir, conf_thresh=0.
         if not mask.any():
             print(f"[EXTRACT] No points for object {oid} (conf_thresh={conf_thresh}), skipping")
             continue
-        save_base = os.path.join(objects_dir,
-                                 f"{oid}_class{'_'.join(map(str, cls_ids))}")
+        cls_str = "_".join(map(str, cls_ids))
+        save_base = os.path.join(objects_dir, f"{oid}__cls_{cls_str}")
         model.save_asset(mask, save_path_base=save_base)
-        print(f"[EXTRACT] {oid} → {mask.sum().item()} pts (conf≥{conf_thresh}) → {save_base}")
+        print(f"[EXTRACT] {oid} (cls {cls_str}) → {mask.sum().item()} pts "
+              f"(conf≥{conf_thresh}) → {save_base}.pt / .ply")
 
 
 # ------------------------------------------------------------------
