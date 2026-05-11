@@ -124,29 +124,19 @@ class RadFoamScene(torch.nn.Module):
         self.density = nn.Parameter(density[perm])
 
     def initialize_from_pcd(self, points, points_colors):
-        print(f"Initializing from PCD with {points.shape[0]} points")
         points = points.to(self.device)
-        points_mean = points.mean(dim=0, keepdim=True)
-        points_std = points.std(dim=0, keepdim=True)
         points_colors = points_colors.to(self.device)
 
         num_random = 5_000
-        random = (
-            torch.randn([num_random, 3], device=self.device) * points_std
-            + points_mean
-        )
+        random = torch.randn([num_random, 3], device=self.device) * 10
 
-        num_samples = int(0.8* points.shape[0])
+        num_samples = int(0.9 * points.shape[0])
         print(
             f"Starting with {num_samples} points from {points.shape[0]} COLMAP points"
         )
-        points_idx = fpsample.bucket_fps_kdtree_sampling(
-            points.cpu().numpy(), num_samples
-        )
-        points_idx = torch.tensor(
-            points_idx, device=self.device, dtype=torch.long
-        )
+        points_idx = torch.randint(0, points.shape[0], (num_samples,))
         samp_points = points[points_idx]
+        samp_points += torch.randn_like(samp_points) * 1e-2
         samp_colors = points_colors[points_idx]
 
         primal_points = torch.cat([samp_points, random], dim=0)
@@ -170,12 +160,6 @@ class RadFoamScene(torch.nn.Module):
         self.update_triangulation(rebuild=False)
 
         self.density = nn.Parameter(primal_density)
-        self.num_init_points = self.primal_points.shape[0]
-
-        self.update_triangulation(rebuild=False)
-
-        self.density = nn.Parameter(primal_density)
-
         self.num_init_points = self.primal_points.shape[0]
     
     def initialize_identity_encoding(self, num_clusters=16, identity_dim=16):
