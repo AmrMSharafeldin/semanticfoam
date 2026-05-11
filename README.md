@@ -389,7 +389,7 @@ python scene_editing.py \
 
 ---
 
-## Scene Editing Configuration
+### Scene Editing Configuration
 
 Scene edits are controlled through:
 
@@ -399,7 +399,7 @@ Scene edits are controlled through:
 
 ---
 
-## Editing Modes
+### Editing Modes
 
 | Mode | Description |
 |---|---|
@@ -408,7 +408,7 @@ Scene edits are controlled through:
 
 ---
 
-## Config Parameters
+### Config Parameters
 
 | Parameter | Description |
 |---|---|
@@ -421,7 +421,7 @@ Scene edits are controlled through:
 
 ---
 
-## Object Removal Example
+### Object Removal Example
 
 ```python
 application_mode = "remove"
@@ -430,7 +430,7 @@ target_class = [46]
 
 ---
 
-## Object Insertion Example
+### Object Insertion Example
 
 ```python
 application_mode = "insert"
@@ -444,7 +444,7 @@ scale_factor = 1.2
 
 ---
 
-## Important Flags Reference
+### Important Flags Reference
 
 | Flag | Default | Description |
 |---|---|---|
