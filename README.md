@@ -4,8 +4,8 @@
 
 <div align="center">
 
-[![Project Page](https://img.shields.io/badge/Project-Page-blue?style=for-the-badge&logo=githubpages&logoColor=white)](http://semanticfoam.github.io/)
-[![arXiv](https://img.shields.io/badge/arXiv-Paper-b31b1b?style=for-the-badge&logo=arxiv&logoColor=white)](https://arxiv.org/abs/2604.26262)
+[![Project Page](https://img.shields.io/badge/Project-Page-5F8D7A?style=for-the-badge&logo=githubpages&logoColor=white)](http://semanticfoam.github.io/)
+[![arXiv](https://img.shields.io/badge/arXiv-Paper-8FAF9D?style=for-the-badge&logo=arxiv&logoColor=white)](https://arxiv.org/abs/2604.26262)
 
 </div>
 
