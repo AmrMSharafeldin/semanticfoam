@@ -459,22 +459,11 @@ scale_factor = 1.2
 
 ---
 
-## Trajectory Types
 
-| Type | Description |
-|---|---|
-| `360` | Global orbit around the scene or selected object center. |
-| `llff` | Orbit trajectory around the local z-axis of the selected camera pose. |
 
----
 
-## Notes
 
-- Scene edits are applied before rendering begins.
-
-- Object-centered trajectories automatically compute object centroids from classified scene points.
-
-- Edited videos are saved inside:
+Edited videos are saved inside:
 
 ```text
 videos_edited/
