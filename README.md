@@ -156,9 +156,6 @@ Example:
 python test.py -c output/garden_semanticfoam/config.yaml
 ```
 
----
-
-## What `test.py` Does
 
 The evaluation pipeline is divided into multiple stages:
 
@@ -184,13 +181,13 @@ Also saves:
 Computes:
 
 - IoU
-- Pixel Accuracy
+- Accuracy
 
 Also saves:
 
 - Predicted masks
 - Ground-truth masks
-- Extracted object crops
+- Extracted objects
 
 ---
 
