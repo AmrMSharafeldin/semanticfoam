@@ -279,7 +279,7 @@ python test.py \
 ```bash
 python test.py \
     -c output/garden/config.yaml \
-    --trajectory_type firstcam
+    --trajectory_type llff
 ```
 
 ---
@@ -310,7 +310,7 @@ python test.py \
 | Flag | Default | Description |
 |---|---|---|
 | `--eval_segmentation` | `False` | Run segmentation evaluation and compute IoU / Accuracy metrics. Also extracts object assets. |
-| `--trajectory_type` | `None` | Render trajectory videos. Options: `360`, `firstcam`, `spiral`. |
+| `--trajectory_type` | `None` | Render trajectory videos. Options: `360`, `llff`, `spiral`. |
 | `--conf_thresh` | `0.9` | Softmax confidence threshold used during object extraction. |
 | `--fps` | `30` | Output video frame rate. |
 | `--n_frames` | `200` | Number of frames in rendered trajectories. |
@@ -327,7 +327,7 @@ python test.py \
 | Type | Description |
 |---|---|
 | `360` | Global orbit around the scene or selected object center. |
-| `firstcam` | Orbit relative to the first training camera pose. |
+| `llff` | Orbit trajectory around the local z-axis of the selected camera pose. |
 | `spiral` | Smooth spiral trajectory around the scene. |
 
 ---
