@@ -1,4 +1,4 @@
-# Semantic Foam: Semantic Decomposition for Real-Time Radiance Fields
+# Semantic Foam: Unifying Spatial and Semantic Scene Decomposition
 
 ## Amr Sharafeldin, Shrisudhan Govindarajan, Thomas Walker, Aryan Mikaeili, Daniel Rebain, Kwang Moo Yi, Andrea Tagliasacchi
 
