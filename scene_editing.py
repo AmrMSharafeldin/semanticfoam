@@ -62,7 +62,7 @@ def main():
     train_handler = DataHandler(dataset_args, rays_per_batch=0, device=device)
     train_handler.reload(split="train", downsample=min(dataset_args.downsample))
 
-    # ---- Apply scene edit ----
+    #  Apply scene edit 
     if pipeline_args.target_class != [-1]:
         print(f"[EDIT] mode={pipeline_args.application_mode}  classes={pipeline_args.target_class}")
         run_application(
@@ -99,7 +99,7 @@ def main():
     render_scene(model, classifier, classifier_args,
                  scene_cams, scene_out, scene_name, args.fps, rgb_only=True)
 
-    # ---- Per-object RGB videos ----
+    #  Per-object RGB videos 
     obj_groups = []
     if args.video_target_class:
         obj_groups.append(args.video_target_class)

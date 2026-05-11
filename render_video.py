@@ -10,7 +10,8 @@ from PIL import Image
 
 import radfoam
 from radfoam_model.utils import visualize_obj
-
+from radfoam_model.scene import RadFoamScene
+ 
 
 def compute_object_center(model, seg_all, cls_ids):
     """Return the bbox midpoint of scene points whose class is in cls_ids (MAD outlier-filtered)."""
@@ -264,3 +265,67 @@ def render_object(model, classifier, classifier_args, cameras, cls_ids, out_dir,
         Image.fromarray(img).save(os.path.join(obj_dir, f"{i:04d}.png"))
 
     make_video(obj_dir, f"{name}_obj.mp4", fps)
+
+
+
+def run_application(
+    model,
+    classifier,
+    classifier_args,
+    pipeline_args,
+    target_class,
+    application_mode="density",
+    model_args=None,
+):
+
+    with torch.no_grad():
+        points, attributes, _, _ = model.get_trace_data()
+
+        seg_features = attributes[..., -classifier_args.input_dim:]
+        logits_pts = classifier(seg_features)
+        probs = torch.softmax(logits_pts, dim=-1)
+
+        pred_classes_pts = probs.argmax(dim=-1)
+
+        mask = torch.isin(
+            pred_classes_pts,
+            torch.tensor(target_class, device=pred_classes_pts.device)
+        )
+
+        if not mask.any():
+            print("[APP] No matching points")
+            return False
+
+        print(f"[APP] Matched {mask.sum().item()} points")
+
+        if application_mode == "density":
+            model.shutdown_density(mask)
+
+        elif application_mode == "remove":
+            model.remove_points(mask, density_thresh=0.01)
+
+        elif application_mode == "duplicate":
+            model.duplicate_points(mask)
+
+        elif application_mode == "move":
+            model.move_points(mask)
+
+        elif application_mode == "insert":
+            model.remove_points(mask, density_thresh=0.01)
+
+            import_base = pipeline_args.import_asset_path
+            loaded_scene = RadFoamScene(args=model_args, device=model.device)
+            loaded_scene.load_pt(import_base)
+
+            model.import_asset(
+                loaded_scene,
+                translation=pipeline_args.import_translation,
+                scale_factor=pipeline_args.import_scale,
+                rotation_degrees=pipeline_args.import_rotation,
+            )
+
+        else:
+            print("[APP] Unknown mode")
+            return False
+
+    return True

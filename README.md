@@ -369,6 +369,117 @@ to exist inside the dataset directory.
 
 - All renders and metrics are saved automatically into the experiment output directory.
 
+
+
+## Scene Editing
+
+Apply editing operations to trained Semantic Foam scenes and render edited trajectory videos.
+
+Editing parameters are controlled directly through the config file.
+
+---
+
+### Basic Usage
+
+```bash
+python scene_editing.py \
+    -c output/garden/config.yaml \
+    --trajectory_type 360
+```
+
+---
+
+## Scene Editing Configuration
+
+Scene edits are controlled through:
+
+- `target_class`
+- `application_mode`
+- inserted asset parameters inside the config
+
+---
+
+## Editing Modes
+
+| Mode | Description |
+|---|---|
+| `remove` | Remove selected objects from the scene. |
+| `insert` | Insert external assets into the scene. |
+
+---
+
+## Config Parameters
+
+| Parameter | Description |
+|---|---|
+| `target_class` | Object class IDs to edit. |
+| `application_mode` | Editing operation to apply. |
+| `inserted_asset_ply` | Path to inserted asset checkpoint. |
+| `translation` | Translation offset for inserted assets. |
+| `rotation_degrees` | Rotation applied to inserted assets. |
+| `scale_factor` | Scale applied to inserted assets. |
+
+---
+
+## Object Removal Example
+
+```python
+application_mode = "remove"
+target_class = [46]
+```
+
+---
+
+## Object Insertion Example
+
+```python
+application_mode = "insert"
+
+inserted_asset_ply = "assets/chair.pt"
+
+translation = [0.0, 0.0, 1.5]
+rotation_degrees = [0, 45, 0]
+scale_factor = 1.2
+```
+
+---
+
+## Important Flags Reference
+
+| Flag | Default | Description |
+|---|---|---|
+| `--trajectory_type` | `360` | Camera trajectory type. Options: `360`, `llff`. |
+| `--video_target_class` | `None` | Class IDs whose centroid is used as the orbit center. |
+| `--fps` | `30` | Output video frame rate. |
+| `--n_frames` | `200` | Number of frames in the rendered trajectory. |
+| `--radius` | `3.5` | Orbit radius for trajectory rendering. |
+| `--fov` | `0.7` | Camera field of view. |
+| `--height` | `0.8` | Height offset applied to trajectory cameras. |
+| `--forward_push` | `0.0` | Push camera forward during llff trajectories. |
+
+---
+
+## Trajectory Types
+
+| Type | Description |
+|---|---|
+| `360` | Global orbit around the scene or selected object center. |
+| `llff` | Orbit trajectory around the local z-axis of the selected camera pose. |
+
+---
+
+## Notes
+
+- Scene edits are applied before rendering begins.
+
+- Object-centered trajectories automatically compute object centroids from classified scene points.
+
+- Edited videos are saved inside:
+
+```text
+videos_edited/
+```
+
 ## Citation
 
 ```bibtex
