@@ -124,7 +124,59 @@ class RadFoamScene(torch.nn.Module):
         self.density = nn.Parameter(density[perm])
 
     def initialize_from_pcd(self, points, points_colors):
-        self.random_initialize()
+        print(f"Initializing from PCD with {points.shape[0]} points")
+        points = points.to(self.device)
+        points_mean = points.mean(dim=0, keepdim=True)
+        points_std = points.std(dim=0, keepdim=True)
+        points_colors = points_colors.to(self.device)
+
+        num_random = 5_000
+        random = (
+            torch.randn([num_random, 3], device=self.device) * points_std
+            + points_mean
+        )
+
+        num_samples = int(0.8* points.shape[0])
+        print(
+            f"Starting with {num_samples} points from {points.shape[0]} COLMAP points"
+        )
+        points_idx = fpsample.bucket_fps_kdtree_sampling(
+            points.cpu().numpy(), num_samples
+        )
+        points_idx = torch.tensor(
+            points_idx, device=self.device, dtype=torch.long
+        )
+        samp_points = points[points_idx]
+        samp_colors = points_colors[points_idx]
+
+        primal_points = torch.cat([samp_points, random], dim=0)
+        primal_density = torch.cat(
+            [
+                torch.rand(samp_colors.shape[0], 1, dtype=self.attr_dtype),
+                -0.5 * torch.ones(num_random, 1, dtype=self.attr_dtype),
+            ],
+            dim=0,
+        ).to(self.device)
+
+        torch.cuda.empty_cache()
+
+        self.triangulation = radfoam.Triangulation(primal_points)
+        perm = self.triangulation.permutation().to(torch.long)
+        primal_points = primal_points[perm]
+
+        self.primal_points = nn.Parameter(primal_points)
+        self.faces = None
+
+        self.update_triangulation(rebuild=False)
+
+        self.density = nn.Parameter(primal_density)
+        self.num_init_points = self.primal_points.shape[0]
+
+        self.update_triangulation(rebuild=False)
+
+        self.density = nn.Parameter(primal_density)
+
+        self.num_init_points = self.primal_points.shape[0]
     
     def initialize_identity_encoding(self, num_clusters=16, identity_dim=16):
         """

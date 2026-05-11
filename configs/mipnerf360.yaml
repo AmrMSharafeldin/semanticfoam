@@ -22,7 +22,7 @@ white_background: true
 quantile_weight: 1e-4
 viewer: false
 debug: false
-experiment_name: "garden_tv_test"
+experiment_name: "garden"
 use_TV: True
 tv_lambda: 1000
 segmentation_loss_weight: 1.

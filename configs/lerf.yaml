@@ -3,8 +3,8 @@
 # ============================
 sh_degree: 3
 init_points: 131_072
-final_points: 2_097_152
-activation_scale: 1.0
+final_points: 4194304
+activation_scale: 1
 identity_dim: 16
 device: cuda
 unfreeze_seg_iter: 0
@@ -21,29 +21,26 @@ densify_factor: 1.15
 white_background: true
 quantile_weight: 1e-4
 viewer: false
-debug: true
-experiment_name: "lerf/waldo_kitchen_ce"
-training_mode: "joint"
+debug: false
+experiment_name: "garden"
 use_TV: True
 tv_lambda: 1000
-segmentattion_loss_type: "ce"
-segmentation_loss_weight: 1.0
-freeeze_segmentation_at: 1_000_000
+segmentation_loss_weight: 1.
 
 # ============================
 # Point removal / manipulation
 # ============================
 application_mode: "remove"
-target_class: [1,9,21]
-import_asset_path: "output/bonsai_ce/objects/cherry_blossom_tree_class1.pt"
+target_class: [22]
+import_asset_path: "output/garden_ce/objects/cherry_blossom_tree_class[1, 9, 21].pt"
 
 # ============================
 # Optimization Parameters
 # ============================
 points_lr_init: 2e-4
 points_lr_final: 5e-6
-density_lr_init: 1e-0
-density_lr_final: 1e-1
+density_lr_init: 1e-1
+density_lr_final: 1e-2
 attributes_lr_init: 5e-3
 attributes_lr_final: 5e-4
 sh_factor: 0.02
@@ -53,13 +50,13 @@ freeze_points: 18_000
 # Dataset Parameters
 # ============================
 dataset: "colmap"
-data_path: "data/lerf"
-scene: "waldo_kitchen"
+data_path: "data/360_v2"
+scene: "garden"
 patch_based: false
 downsample: [1, 1]
-downsample_iterations: [0, 100_000]
-radiance_batch_size: 900_000
-segmentation_batch_size: 900_000
+downsample_iterations: [0, 3_0000]
+radiance_batch_size: 90_0000
+segmentation_batch_size: 90_0000
 
 # ============================
 # Classifier Parameters
@@ -67,7 +64,6 @@ segmentation_batch_size: 900_000
 input_dim: 16
 num_classes: 256
 classifier_lr: 5e-3
-
 
 import_translation: [0.0, 0.0, 0.0]
 import_scale: 1.0
