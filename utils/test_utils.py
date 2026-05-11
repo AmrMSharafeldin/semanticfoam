@@ -14,10 +14,6 @@ from radfoam_model.utils import id2rgb, visualize_obj
 lpips_loss_fn = lpips.LPIPS(net='vgg').cuda()
 
 
-# ------------------------------------------------------------------
-# SSIM
-# ------------------------------------------------------------------
-
 def _gaussian(window_size, sigma):
     gauss = torch.Tensor([
         math.exp(-((x - window_size // 2) ** 2) / float(2 * sigma ** 2))
@@ -33,6 +29,7 @@ def _create_window(window_size, channel):
 
 
 def ssim(img1, img2, window_size=11):
+    """Structural similarity index between two [C, H, W] image tensors."""
     channel = img1.size(-3)
     window = _create_window(window_size, channel).type_as(img1)
     if img1.is_cuda:
@@ -49,10 +46,6 @@ def ssim(img1, img2, window_size=11):
             ((mu1_sq + mu2_sq + C1) * (s1 + s2 + C2))).mean()
 
 
-# ------------------------------------------------------------------
-# Image I/O
-# ------------------------------------------------------------------
-
 def save_mask_png(mask_bool, path):
     Image.fromarray((mask_bool.astype(np.uint8) * 255)).save(path)
 
@@ -68,10 +61,6 @@ def save_rgb_with_white_bg(rgb_tensor, mask_bool, path):
     out[mask_bool] = (rgb * 255).astype(np.uint8)[mask_bool]
     Image.fromarray(out).save(path)
 
-
-# ------------------------------------------------------------------
-# Evaluation metrics
-# ------------------------------------------------------------------
 
 def compute_iou(gt, pred):
     inter = np.logical_and(gt, pred).sum()
@@ -91,11 +80,8 @@ def compute_lpips(gt_t, pred_t):
     return float(lpips_loss_fn(gt, pred).item())
 
 
-# ------------------------------------------------------------------
-# Mask loading
-# ------------------------------------------------------------------
-
 def load_masks(mask_root):
+    """Load binary PNG masks from a directory tree of {obj_id}/{frame}.png files."""
     frame_dict = {}
     for obj_id in sorted(d for d in os.listdir(mask_root)
                          if os.path.isdir(os.path.join(mask_root, d))):
@@ -125,11 +111,8 @@ def _find_in_dataset(frame, data_handler):
     return None
 
 
-# ------------------------------------------------------------------
-# Segmentation helpers
-# ------------------------------------------------------------------
-
 def forward_predict(model, classifier, data_handler, idx, cls_args, points):
+    """Run inference on one image; returns (rgb_CHW, gt_CHW, pred_class_HW_np)."""
     rays = data_handler.rays[idx]
     H, W, _ = rays.shape
     flat = rays.reshape(-1, 6).cuda()

@@ -31,12 +31,9 @@ torch.manual_seed(42)
 np.random.seed(42)
 
 
-# ------------------------------------------------------------------
-# Stage 1 — test render (PSNR / SSIM / LPIPS)
-# ------------------------------------------------------------------
-
 def test_render(model, classifier, out_dir, test_data_handler, sam_test_data_handler,
                 ray_batch_fetcher, rgb_batch_fetcher, classifier_args):
+    """Render all test images and compute PSNR, SSIM, LPIPS metrics."""
     rays = test_data_handler.rays
     points, _, _, _ = model.get_trace_data()
     start_points = model.get_starting_point(rays[:, 0, 0].cuda(), points, model.aabb_tree)
@@ -113,11 +110,8 @@ def test_render(model, classifier, out_dir, test_data_handler, sam_test_data_han
     return avg_psnr
 
 
-# ------------------------------------------------------------------
-# Stage 2 — segmentation evaluation
-# ------------------------------------------------------------------
-
 def render_set(model, classifier, train_data, test_data, cls_args, dataset_args, outdir):
+    """Evaluate segmentation IoU/Acc against ground-truth masks and write per-object crops."""
     mask_root = os.path.join(dataset_args.data_path, dataset_args.scene,
                              "segmentation_labels", "masks")
     if not os.path.isdir(mask_root):
@@ -238,12 +232,8 @@ def render_set(model, classifier, train_data, test_data, cls_args, dataset_args,
             "metrics_path": fpath}
 
 
-# ------------------------------------------------------------------
-# Object extraction
-# ------------------------------------------------------------------
-
 def extract_objects(model, classifier, cls_args, obj_map, outdir, conf_thresh=0.9):
-    """Classify all scene points and save per-object point assets."""
+    """Classify all scene points and save per-object assets as .pt and .ply."""
     objects_dir = os.path.join(outdir, "objects")
     os.makedirs(objects_dir, exist_ok=True)
 
@@ -267,10 +257,6 @@ def extract_objects(model, classifier, cls_args, obj_map, outdir, conf_thresh=0.
         print(f"[EXTRACT] {oid} (cls {cls_str}) → {mask.sum().item()} pts "
               f"(conf≥{conf_thresh}) → {save_base}.pt / .ply")
 
-
-# ------------------------------------------------------------------
-# main
-# ------------------------------------------------------------------
 
 def main():
     parser = configargparse.ArgParser()
@@ -326,7 +312,6 @@ def main():
     ray_fetcher = radfoam.BatchFetcher(test_data_handler.rays, batch_size=1, shuffle=False)
     rgb_fetcher = radfoam.BatchFetcher(test_data_handler.rgbs, batch_size=1, shuffle=False)
 
-    #---- Stage 1: test render ----
     print("\n[STAGE 1] TEST RENDER")
     avg_psnr = test_render(
         model, classifier, test_dir,
@@ -335,7 +320,6 @@ def main():
     )
     print(f"Test render complete — PSNR: {avg_psnr:.4f} dB\n")
 
-    # ---- Stage 2: segmentation eval + Stage 3: object extraction ----
     obj_map = {}
     if args.eval_segmentation:
         print("[STAGE 2] SEGMENTATION EVALUATION")
@@ -355,7 +339,6 @@ def main():
             extract_objects(model, classifier, classifier_args, obj_map, test_dir,
                             conf_thresh=args.conf_thresh)
 
-    # ---- Stage 4: trajectory videos ----
     if args.trajectory_type:
         ttype = args.trajectory_type
         print(f"\n[STAGE 4] RENDER VIDEOS — trajectory: {ttype}")

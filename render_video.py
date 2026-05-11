@@ -12,11 +12,8 @@ import radfoam
 from radfoam_model.utils import visualize_obj
 
 
-# ------------------------------------------------------------------
-# Object center  (MAD outlier removal + bbox midpoint)
-# ------------------------------------------------------------------
-
 def compute_object_center(model, seg_all, cls_ids):
+    """Return the bbox midpoint of scene points whose class is in cls_ids (MAD outlier-filtered)."""
     if not isinstance(cls_ids, (list, tuple)):
         cls_ids = [cls_ids]
 
@@ -38,11 +35,8 @@ def compute_object_center(model, seg_all, cls_ids):
     return ((mins + maxs) * 0.5).detach()
 
 
-# ------------------------------------------------------------------
-# Video  (raw mp4 -> ffmpeg h264)
-# ------------------------------------------------------------------
-
 def make_video(folder, name="video.mp4", fps=30):
+    """Write all PNGs in folder to an h264 mp4 via ffmpeg."""
     frames = sorted(f for f in os.listdir(folder) if f.endswith(".png"))
     if not frames:
         return
@@ -66,11 +60,8 @@ def make_video(folder, name="video.mp4", fps=30):
     print(f"[VIDEO] Saved -> {final}")
 
 
-# ------------------------------------------------------------------
-# Camera export
-# ------------------------------------------------------------------
-
 def export_cameras_to_json(cameras, save_path):
+    """Serialize camera trajectory to a JSON file with world-view transforms."""
     frames = []
     for i, cam in enumerate(cameras):
         right   = cam["right"].detach().cpu().numpy()
@@ -88,10 +79,6 @@ def export_cameras_to_json(cameras, save_path):
         json.dump(frames, f, indent=2)
     print(f"[EXPORT] Saved cameras -> {save_path}")
 
-
-# ------------------------------------------------------------------
-# Camera utilities
-# ------------------------------------------------------------------
 
 def _get_first_camera(data_handler, device):
     """Extract center, right, up, forward from the first image ray grid."""
@@ -136,10 +123,6 @@ def _make_cam(pos, target, global_up, fov, H, W):
 
     return {"position": pos, "forward": f, "right": rvec, "up": u, "fov": fov, "H": H, "W": W}
 
-
-# ------------------------------------------------------------------
-# Trajectory builders
-# ------------------------------------------------------------------
 
 def build_cameras(ttype, model, target, data_handler, args):
     device = model.device
@@ -187,10 +170,6 @@ def build_cameras(ttype, model, target, data_handler, args):
     raise ValueError(f"Unknown trajectory type: {ttype!r}")
 
 
-# ------------------------------------------------------------------
-# Ray generation from camera dict
-# ------------------------------------------------------------------
-
 def _cam_to_rays(cam, device):
     H, W   = cam["H"], cam["W"]
     aspect = W / H
@@ -213,10 +192,6 @@ def _cam_to_rays(cam, device):
     orig = cam["position"].expand_as(dirs)
     return torch.cat([orig, dirs], dim=-1).reshape(-1, 6), H, W
 
-
-# ------------------------------------------------------------------
-# Render
-# ------------------------------------------------------------------
 
 def render_scene(model, classifier, classifier_args, cameras, out_dir, name, fps):
     """Render full-scene RGB + segmentation videos."""
