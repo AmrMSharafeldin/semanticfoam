@@ -138,13 +138,13 @@ python train.py -c configs/<config_file>.yaml
 ```
 
 
-# Testing and Evaluation
+## Testing and Evaluation
 
 Use the following script to evaluate a trained checkpoint, render test views, compute rendering metrics, evaluate segmentation quality, extract segmented assets, and generate trajectory videos.
 
 ---
 
-## Basic Usage
+### Basic Usage
 
 ```bash
 python test.py -c output/<checkpoint_directory>/config.yaml
@@ -213,7 +213,7 @@ Generates:
 
 ---
 
-# Output Structure
+## Output Structure
 
 After evaluation, outputs are written inside the checkpoint directory:
 
@@ -247,9 +247,9 @@ output/<checkpoint_directory>/
 
 ---
 
-# Common Usage Examples
+## Common Usage Examples
 
-## Basic Evaluation
+### Basic Evaluation
 
 ```bash
 python test.py -c output/garden/config.yaml
@@ -257,7 +257,7 @@ python test.py -c output/garden/config.yaml
 
 ---
 
-## Segmentation Evaluation + Object Extraction
+### Segmentation Evaluation + Object Extraction
 
 ```bash
 python test.py \
@@ -267,7 +267,7 @@ python test.py \
 
 ---
 
-## Render 360° Trajectory Videos
+### Render 360° Trajectory Videos
 
 ```bash
 python test.py \
@@ -277,7 +277,7 @@ python test.py \
 
 ---
 
-## Render First Camera Orbit
+### Render First Camera Orbit
 
 ```bash
 python test.py \
@@ -287,7 +287,7 @@ python test.py \
 
 ---
 
-## Render Spiral Trajectory
+### Render Spiral Trajectory
 
 ```bash
 python test.py \
@@ -297,7 +297,7 @@ python test.py \
 
 ---
 
-## Full Evaluation Pipeline
+### Full Evaluation Pipeline
 
 ```bash
 python test.py \
@@ -308,7 +308,7 @@ python test.py \
 
 ---
 
-# Important Flags Reference
+## Important Flags Reference
 
 | Flag | Default | Description |
 |---|---|---|
@@ -325,7 +325,7 @@ python test.py \
 
 ---
 
-# Trajectory Types
+## Trajectory Types
 
 | Type | Description |
 |---|---|
@@ -335,7 +335,7 @@ python test.py \
 
 ---
 
-# Rendering Metrics
+## Rendering Metrics
 
 The script computes the following rendering metrics:
 
@@ -347,7 +347,7 @@ The script computes the following rendering metrics:
 
 ---
 
-# Segmentation Metrics
+## Segmentation Metrics
 
 For segmentation evaluation:
 
@@ -358,7 +358,7 @@ For segmentation evaluation:
 
 ---
 
-# Notes
+## Notes
 
 - Segmentation evaluation requires:
 
@@ -368,7 +368,11 @@ segmentation_labels/masks/
 
 to exist inside the dataset directory.
 
+- Object extraction uses classifier confidence filtering:
 
+```bash
+--conf_thresh 0.9
+```
 
 - Video rendering automatically generates:
   - full-scene videos
