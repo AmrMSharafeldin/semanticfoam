@@ -9,11 +9,11 @@
 
 </div>
 
-This repository contains the official implementation of **Semantic Foam: Semantic Decomposition for Real-Time Radiance Fields**. Semantic Foam extends Radiant Foam with an explicit semantic feature field defined over a volumetric Voronoi decomposition, enabling high-quality object-level segmentation and editing directly within real-time radiance fields.
+This repository contains the official implementation of **Semantic Foam: Unifying Spatial and Semantic Scene Decomposition**. Semantic Foam extends Radiant Foam with an explicit semantic feature field defined over a volumetric Voronoi decomposition, enabling high-quality object-level segmentation and editing directly within real-time radiance fields.
 
-By leveraging the implicit surface formulation of Radiant Foam alongside spatial regularization over Voronoi neighborhoods, Semantic Foam produces coherent non-convex object masks without requiring convex hull post-processing. The method supports semantic segmentation, object extraction, insertion, removal, and novel view synthesis of edited scenes.
+By leveraging the implicit surface formulation of Radiant Foam alongside spatial regularization over Voronoi neighborhoods, Semantic Foam produces coherent object masks without requiring convex hull post-processing. The method supports semantic segmentation, object extraction, insertion, removal, and novel view synthesis of edited scenes.
 
-The repository includes scripts for training, evaluation, semantic editing, rendering, and visualization, alongside an interactive viewer for inspecting trained scenes and semantic decompositions.
+The repository includes scripts for training, evaluation, scene editing , and visualization, alongside a real-time viewer that can be used to visualize trained models, or optionally to observe the progression of models as they train.
 
 Everything in this repository is still under active development and subject to change.
 
@@ -28,7 +28,7 @@ Everything in this repository is still under active development and subject to c
 Start by cloning the repository:
 
 ```bash
-git clone https://github.com/<your-repo>/semanticfoam.git
+git clone https://github.com/AmrMSharafeldin/semanticfoam.git
 cd semanticfoam
 ```
 
@@ -59,13 +59,13 @@ pip install -r requirements.txt
 # Citation
 
 ```bibtex
-@article{sharafeldin2026semanticfoam,
-  title   = {Semantic Foam: Semantic Decomposition for Real-Time Radiance Fields},
-  author  = {Sharafeldin, Amr and Govindarajan, Shrisudhan and Walker, Thomas and
-             Mikaeili, Aryan and Rebain, Daniel and Yi, Kwang Moo and
-             Tagliasacchi, Andrea},
-  journal = {arXiv},
-  year    = {2026},
+@inproceedings{semanticfoam2026,
+  title     = {Semantic Foam: Unifying Spatial and Semantic Scene Decomposition},
+  author    = {Sharafeldin, Amr and Govindarajan, Shrisudhan and Walker, Thomas and
+               Mikaeili, Aryan and Rebain, Daniel and Yi, Kwang Moo and
+               Tagliasacchi, Andrea},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  year      = {2026}
 }
 ```
 
