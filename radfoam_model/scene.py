@@ -8,7 +8,6 @@ import tqdm
 import radfoam
 from radfoam_model.render import TraceRays
 from radfoam_model.utils import *
-from palettes import tab20_palette_torch, id2rgb, visualize_obj
 import fpsample
 import random
 
