@@ -284,15 +284,8 @@ python test.py \
 
 ---
 
-### Render Spiral Trajectory
 
-```bash
-python test.py \
-    -c output/garden/config.yaml \
-    --trajectory_type spiral
-```
 
----
 
 ### Full Evaluation Pipeline
 
@@ -310,15 +303,14 @@ python test.py \
 | Flag | Default | Description |
 |---|---|---|
 | `--eval_segmentation` | `False` | Run segmentation evaluation and compute IoU / Accuracy metrics. Also extracts object assets. |
-| `--trajectory_type` | `None` | Render trajectory videos. Options: `360`, `llff`, `spiral`. |
+| `--trajectory_type` | `None` | Render trajectory videos. Options: `360`, `llff`. |
 | `--conf_thresh` | `0.9` | Softmax confidence threshold used during object extraction. |
 | `--fps` | `30` | Output video frame rate. |
 | `--n_frames` | `200` | Number of frames in rendered trajectories. |
 | `--radius` | `3.5` | Orbit radius for trajectory rendering. |
 | `--fov` | `0.7` | Camera field of view used during trajectory rendering. |
 | `--height` | `0.8` | Camera height offset for trajectories. |
-| `--forward_push` | `0.0` | Push camera forward during first-camera trajectories. |
-| `--n_rots` | `2` | Number of rotations for orbit trajectories. |
+| `--forward_push` | `0.0` | Push camera forward during llff trajectories. |
 
 ---
 
@@ -328,7 +320,6 @@ python test.py \
 |---|---|
 | `360` | Global orbit around the scene or selected object center. |
 | `llff` | Orbit trajectory around the local z-axis of the selected camera pose. |
-| `spiral` | Smooth spiral trajectory around the scene. |
 
 ---
 
