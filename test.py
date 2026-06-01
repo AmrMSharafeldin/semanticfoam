@@ -179,7 +179,6 @@ def render_set(model, classifier, train_data, test_data, cls_args, dataset_args,
             gt_resized = cv2.resize(gt_mask.astype(np.uint8), (W, H),
                                     interpolation=cv2.INTER_NEAREST).astype(bool)
             pred_mask = np.isin(pred, cls_ids)
-            gt_resized = gt_resized & obj_mask_global
             pred_mask = pred_mask & obj_mask_global
 
             save_mask_png(gt_resized, os.path.join(mask_dir, f"{oid}_gt_mask.png"))
