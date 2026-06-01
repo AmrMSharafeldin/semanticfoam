@@ -120,7 +120,7 @@ dataset_root/
 - Segmentation maps are generated using [DEVA](https://github.com/hkchengrex/Tracking-Anything-with-DEVA?utm_source=chatgpt.com).  
   A preprocessing script will be released soon.
   
-- Per-object binary masks were generated using [SAM-UI](https://github.com/mtaktash/sam-ui?utm_source=chatgpt.com). You can also download it here [Here](https://drive.google.com/drive/folders/1Hl5uGpdkyq1GaEsYkKX_knuRbv-VBbHV?usp=drive_link)
+- Per-object binary masks were generated using [SAM-UI](https://github.com/mtaktash/sam-ui?utm_source=chatgpt.com). You can also download it here [Here](https://drive.google.com/drive/folders/1iWyFPLfbhGgq-yfzaWqLflM68R-otFSp?usp=drive_link)
 - COLMAP reconstructions can be generated using:
 
 ```bash
